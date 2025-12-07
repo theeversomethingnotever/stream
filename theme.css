@@ -1,0 +1,2023 @@
+/*                                                                         *
+
+   ___  ________   ________ ___  ________   ___  _________  ___      ___
+  |\  \|\   ___  \|\  _____\\  \|\   ___  \|\  \|\___   ___\\  \    /  /|
+  \ \  \ \  \\ \  \ \  \__/\ \  \ \  \\ \  \ \  \|___ \  \_\ \  \  /  / /
+   \ \  \ \  \\ \  \ \   __\\ \  \ \  \\ \  \ \  \   \ \  \ \ \  \/  / /
+    \ \  \ \  \\ \  \ \  \_| \ \  \ \  \\ \  \ \  \   \ \  \ \ \    / /
+     \ \__\ \__\\ \__\ \__\   \ \__\ \__\\ \__\ \__\   \ \__\ \ \__/ /
+      \|__|\|__| \|__|\|__|    \|__|\|__| \|__|\|__|    \|__|  \|__|/
+
+
+              infinitv Enhanced — The Big Screen Experience
+              
+   A refined HTPC theme for Jellyfin with remote-friendly navigation,
+   glassmorphism effects, and smooth micro-interactions.
+   
+   SETUP:
+   • Set Jellyfin theme to "Dark"
+   • Set display mode to "TV" for best remote experience
+   • Enable backdrops for dynamic backgrounds
+   • Customize :root variables below for your accent color
+
+*                                                                          */
+
+/* =========================================================================
+   FONTS & CUSTOM PROPERTIES
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+body, h1, h2, h3, h4, button, input, select, textarea {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+:root {
+  /* ===== ACCENT COLOR (Customize Me!) =====
+     Use any H value from an HSL color picker
+     Examples: 36 = orange, 200 = blue, 280 = purple, 340 = pink */
+  --accent-h: 36;
+  --accent-s: 100%;
+  --accent-l: 50%;
+
+  /* ===== BACKGROUND IMAGE =====
+     Replace with your own image URL */
+  --bgImage: url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920");
+  --bgdarkness: 0.75;
+
+  /* ===== TRANSPARENCY LEVELS ===== */
+  --headeropacity: 0.85;
+  --draweropacity: 0.90;
+  --footeropacity: 0.75;
+
+  /* ===== BORDER RADIUS ===== */
+  --rounding-system: 0.5em;
+  --rounding-media: 0.75em;
+  --rounding-cards: 1em;
+
+  /* ===== COMPUTED ACCENT VARIANTS ===== */
+  --fullaccent: hsl(var(--accent-h) var(--accent-s) var(--accent-l));
+  --accent90: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.9);
+  --accent80: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.8);
+  --accent60: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.6);
+  --accent40: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.4);
+  --accent20: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.2);
+  --accent10: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.1);
+
+  /* ===== SHADOWS & EFFECTS ===== */
+  --cardshadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --cardshadow-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --insettop: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  --insetbottom: inset 0 -1px 0 0 rgba(0, 0, 0, 0.2);
+  --cardglow: 0 0 20px 4px var(--accent40);
+  --buttonglow: 0 0 16px 2px var(--accent60);
+  --textshadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  --buttonborder: 2px solid rgba(255, 255, 255, 0.15);
+
+  /* ===== GLASSMORPHISM ===== */
+  --glass-bg: rgba(0, 0, 0, 0.4);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(20px);
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================================================================
+   GLOBAL STYLES & BACKGROUND
+   ========================================================================= */
+
+/* Smooth scrolling globally */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Background with gradient overlay */
+.backgroundContainer:not(.withBackdrop):not(.backgroundContainer-transparent),
+.backgroundContainer.withBackdrop:has(~ .mainAnimatedPages .homePage:not(.hide)) {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.8) 100%),
+    var(--bgImage) !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+}
+
+/* Dynamic backdrop darkening */
+.backgroundContainer.withBackdrop {
+  background-color: rgba(0, 0, 0, var(--bgdarkness)) !important;
+  transition: background-color var(--transition-slow);
+}
+
+/* =========================================================================
+   LAYOUT MODES
+   ========================================================================= */
+
+/* TV Layout - optimized for 10-foot UI */
+.layout-tv {
+  font-size: 110% !important;
+}
+
+/* Hide scrollbars on TV */
+.layout-tv ::-webkit-scrollbar {
+  display: none;
+}
+
+#loginPage,
+.layout-tv {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+/* Fixed header on TV */
+.layout-tv .skinHeader {
+  position: fixed !important;
+}
+
+/* =========================================================================
+   SCROLLBAR STYLING
+   ========================================================================= */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent60) rgba(0, 0, 0, 0.3) !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent60) !important;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent80) !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+/* =========================================================================
+   HEADER & NAVIGATION
+   ========================================================================= */
+
+.skinHeader {
+  padding: 0.5em 1em !important;
+  height: 3.5em;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.headerTop {
+  padding: 0.3em !important;
+}
+
+.skinHeader-withBackground {
+  background: rgba(0, 0, 0, var(--headeropacity)) !important;
+  border-bottom: var(--glass-border);
+}
+
+.pageTitle {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.currentTimeText {
+  font-size: 110% !important;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Header buttons - no scale on focus */
+.headerButton {
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.headerButton:focus {
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+.headerButton:hover {
+  color: var(--fullaccent);
+}
+
+/* Section tabs in header */
+.layout-tv .headerTabs.sectionTabs,
+.layout-desktop .headerTabs.sectionTabs {
+  font-size: 105% !important;
+  margin-top: -2.7em !important;
+  width: 42vw;
+  min-width: 26vw;
+  scrollbar-width: none;
+  scroll-behavior: smooth !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  align-items: center;
+  position: relative;
+}
+
+/* =========================================================================
+   MENU DRAWER
+   ========================================================================= */
+
+.mainDrawer {
+  margin-top: 3.9em !important;
+  box-shadow: none !important;
+  background: rgba(0, 0, 0, var(--draweropacity)) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-right: var(--glass-border);
+}
+
+.navMenuOption {
+  margin: 0.2em 0.5em !important;
+  padding: 0.75em 1em;
+  background: transparent !important;
+  border: 1px solid transparent;
+  border-radius: var(--rounding-system);
+  transition: all var(--transition-fast);
+}
+
+.navMenuOption:hover {
+  background: var(--accent10) !important;
+  color: var(--fullaccent) !important;
+  border-color: var(--accent40);
+}
+
+.navMenuOption:focus {
+  background: var(--accent20) !important;
+  color: var(--fullaccent) !important;
+  border-color: var(--accent80);
+  outline: none;
+}
+
+.navMenuOption-selected {
+  color: var(--fullaccent) !important;
+  background: var(--accent10) !important;
+}
+
+.navMenuOptionText {
+  margin-top: 0;
+  font-weight: 500;
+}
+
+/* =========================================================================
+   DIALOGS & OVERLAYS
+   ========================================================================= */
+
+.dialog,
+.formDialogHeader,
+.formDialogFooter {
+  border-radius: var(--rounding-cards) !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+}
+
+.dialog {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Toasts */
+.toast {
+  box-shadow: var(--cardglow) !important;
+  border-radius: var(--rounding-system) !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+}
+
+/* Loading Spinner */
+.mdl-spinner__layer-1,
+.mdl-spinner__layer-2,
+.mdl-spinner__layer-3,
+.mdl-spinner__layer-4 {
+  border-color: var(--fullaccent) !important;
+}
+
+/* Progress Ring */
+.progressring {
+  margin: 0.4em;
+}
+
+.progressring-bg {
+  display: none;
+}
+
+.progressring-spiner {
+  border-color: var(--fullaccent);
+  border-width: 0.35em;
+}
+
+/* =========================================================================
+   COLLAPSIBLE MENUS
+   ========================================================================= */
+
+.collapseContent {
+  background: transparent !important;
+  padding: 0.5em 0;
+}
+
+.listItem:hover {
+  background: transparent !important;
+}
+
+.actionSheetContent .listItemIcon.check {
+  color: var(--fullaccent) !important;
+}
+
+.actionSheetContent .listItem {
+  padding: 0.6em 0.75em;
+  border-radius: var(--rounding-system);
+  transition: background var(--transition-fast);
+}
+
+.actionSheetContent .listItem:hover {
+  background: var(--accent10) !important;
+}
+
+/* =========================================================================
+   BUTTONS - UNIFIED STYLING
+   ========================================================================= */
+
+/* Primary buttons (Sign In, Save, etc.) */
+.emby-button.block,
+.button-submit,
+.raised {
+  border-radius: var(--rounding-system);
+  border: var(--buttonborder);
+  margin: 0.5em 0;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+.emby-button.block:hover,
+.button-submit:hover,
+.raised:hover {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent40) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.emby-button.block:focus,
+.button-submit:focus,
+.raised:focus {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent80) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  box-shadow: var(--buttonglow);
+  outline: none;
+}
+
+/* Icon buttons */
+.paper-icon-button-light:not(.alphaPickerButton) {
+  border-radius: var(--rounding-system);
+  transition: all var(--transition-fast);
+}
+
+.paper-icon-button-light:not(.alphaPickerButton):not(:disabled):hover {
+  color: var(--fullaccent);
+  background-color: var(--accent10);
+}
+
+.paper-icon-button-light:not(.alphaPickerButton):focus,
+.paper-icon-button-light:not(.alphaPickerButton):active {
+  color: var(--fullaccent);
+  background-color: var(--accent20);
+  outline: none;
+}
+
+/* Tab buttons */
+.emby-tab-button {
+  padding: 0.6em 1.25em 0.8em !important;
+  border-radius: var(--rounding-system);
+  transition: all var(--transition-fast);
+}
+
+.emby-tab-button:hover {
+  color: var(--accent80) !important;
+  background: var(--accent10);
+}
+
+.emby-tab-button:focus {
+  color: var(--fullaccent) !important;
+  transform: scale(1.05) !important;
+  -webkit-transform: scale(1.05) !important;
+}
+
+.emby-tab-button-active {
+  color: #fff;
+  position: relative;
+}
+
+.emby-tab-button-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: var(--fullaccent);
+  border-radius: 2px;
+}
+
+/* Action sheet menu items */
+.actionSheetMenuItem {
+  border-radius: var(--rounding-system);
+  border: 2px solid transparent;
+  background: transparent !important;
+  margin: 0.15em 0 !important;
+  padding: 0.6em 0.75em !important;
+  transition: all var(--transition-fast);
+  transform: none !important;
+}
+
+.actionSheetMenuItem:hover {
+  color: var(--accent80) !important;
+  border-color: var(--accent20) !important;
+  background: var(--accent10) !important;
+}
+
+.actionSheetMenuItem:focus {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent60) !important;
+  background: var(--accent20) !important;
+  outline: none;
+}
+
+/* Media page play buttons */
+.detailButton {
+  font-size: 115% !important;
+  margin-right: 1em !important;
+  border-radius: var(--rounding-media) !important;
+  border: var(--buttonborder) !important;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-normal);
+}
+
+.detailButton:hover {
+  color: var(--fullaccent) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-color: var(--accent40) !important;
+  transform: translateY(-2px);
+}
+
+.detailButton:focus {
+  color: var(--fullaccent) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-color: var(--accent80) !important;
+  box-shadow: var(--buttonglow) !important;
+  transform: scale(1.1) !important;
+  -webkit-transform: scale(1.1) !important;
+  outline: none;
+}
+
+/* Collapsible buttons */
+.emby-collapsible-button {
+  border-radius: var(--rounding-system);
+  background: transparent !important;
+  border: 2px solid transparent;
+  padding: 0.75em !important;
+  transition: all var(--transition-fast);
+  transform: none !important;
+}
+
+.emby-collapsible-button:hover {
+  color: var(--accent80) !important;
+  border-color: var(--accent20) !important;
+}
+
+.emby-collapsible-button:focus {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent60) !important;
+  outline: none;
+}
+
+.emby-collapse > .emby-button.show-focus > .emby-collapsible-title {
+  margin-left: 0.5em;
+}
+
+/* Link buttons */
+.button-link,
+.overview-expand {
+  color: inherit !important;
+  background: transparent !important;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.button-link:hover,
+.overview-expand:hover {
+  color: var(--accent80) !important;
+}
+
+.button-link:focus,
+.overview-expand:focus {
+  color: var(--fullaccent) !important;
+  outline: none;
+}
+
+/* Clear links - hide on TV */
+.layout-tv .sectionTitleContainer > .clearLink {
+  display: none;
+}
+
+.clearLink {
+  padding: 0.2em 1em !important;
+  background: transparent !important;
+}
+
+.clearLink > .emby-button {
+  padding: 0.2em 1em !important;
+  background: transparent !important;
+  font-size: 1.4em;
+  font-weight: 400;
+  transition: color var(--transition-fast);
+}
+
+.clearLink > .emby-button:hover,
+.clearLink > .emby-button:focus {
+  background: transparent !important;
+  color: var(--fullaccent) !important;
+}
+
+/* List item buttons */
+.listItem-border {
+  border-radius: var(--rounding-system);
+  border: 2px solid transparent;
+  background: transparent !important;
+  margin: 0.15em 0 !important;
+  padding: 0.5em 0.75em !important;
+  transition: all var(--transition-fast);
+}
+
+.listItem-border:hover {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent40) !important;
+  background: var(--accent10) !important;
+}
+
+.listItem-border:focus {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent80) !important;
+  outline: none;
+}
+
+.listItemBodyText {
+  text-shadow: var(--textshadow) !important;
+}
+
+/* Menu list items */
+.listTextButton-autohide {
+  border-radius: var(--rounding-system);
+  border: 2px solid transparent;
+  background: transparent !important;
+  padding: 0.75em !important;
+  margin: 0.2em !important;
+  transition: all var(--transition-fast);
+}
+
+.listTextButton-autohide:hover {
+  color: var(--accent80) !important;
+  border-color: var(--accent20) !important;
+}
+
+.listTextButton-autohide:focus {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent60) !important;
+  outline: none;
+}
+
+/* =========================================================================
+   FORM INPUTS & CONTROLS
+   ========================================================================= */
+
+.emby-input,
+.emby-textarea {
+  padding: 0.6em 0.75em;
+  border-radius: var(--rounding-system) !important;
+  border: var(--buttonborder) !important;
+  background: rgba(0, 0, 0, 0.4);
+  transition: all var(--transition-fast);
+}
+
+.emby-textarea {
+  resize: vertical !important;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.9em;
+  min-height: 6em;
+}
+
+.emby-input:not(:disabled):hover,
+.emby-textarea:not(:disabled):hover {
+  border-color: var(--accent40) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.emby-input:focus,
+.emby-textarea:focus {
+  border-color: var(--accent80) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 0 0 3px var(--accent20);
+  outline: none;
+}
+
+/* Select dropdown */
+.emby-select {
+  border-radius: var(--rounding-system) !important;
+  transition: all var(--transition-fast);
+}
+
+.emby-select-withcolor {
+  border: var(--buttonborder) !important;
+  border-radius: var(--rounding-system) !important;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.emby-select-withcolor:not(:disabled):hover {
+  border-color: var(--accent40) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.emby-select-withcolor:focus {
+  border-color: var(--accent80) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  outline: none;
+}
+
+.emby-select-focusscale:focus {
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+.selectContainer .selectArrowContainer {
+  top: 2em;
+}
+
+.trackSelectionFieldContainer .selectArrowContainer {
+  top: 0.3em;
+}
+
+.emby-select option {
+  background: rgba(20, 20, 20, 0.98) !important;
+  padding: 0.5em;
+}
+
+.emby-select option:hover {
+  background: var(--accent40) !important;
+}
+
+/* Checkbox */
+.checkboxOutline {
+  border: var(--buttonborder) !important;
+  border-radius: var(--rounding-system) !important;
+  background: rgba(0, 0, 0, 0.4);
+  transition: all var(--transition-fast);
+}
+
+.emby-checkbox:hover + span + .checkboxOutline {
+  border-color: var(--accent40) !important;
+}
+
+.emby-checkbox:focus + span + .checkboxOutline {
+  border-color: var(--accent80) !important;
+  box-shadow: 0 0 0 3px var(--accent20);
+}
+
+.emby-checkbox:checked + span + .checkboxOutline {
+  border-color: var(--accent60) !important;
+  background: var(--accent80) !important;
+}
+
+/* Radio buttons */
+.mdl-radio__button:hover + .mdl-radio__circles .mdl-radio__inner-circle,
+.mdl-radio__button:hover + .mdl-radio__circles .mdl-radio__outer-circle,
+.mdl-radio__button:hover + .mdl-radio__circles + .mdl-radio__label {
+  color: var(--accent80) !important;
+}
+
+.mdl-radio__button:focus + .mdl-radio__circles .mdl-radio__inner-circle,
+.mdl-radio__button:focus + .mdl-radio__circles .mdl-radio__outer-circle,
+.mdl-radio__button:focus + .mdl-radio__circles + .mdl-radio__label {
+  color: var(--fullaccent) !important;
+}
+
+.mdl-radio__button[checked] + .mdl-radio__circles .mdl-radio__inner-circle,
+.mdl-radio__button[checked] + .mdl-radio__circles .mdl-radio__outer-circle {
+  color: var(--fullaccent) !important;
+}
+
+.mdl-radio__focus-circle {
+  background: var(--fullaccent) !important;
+}
+
+/* Labels */
+.inputLabelFocused,
+.textareaLabelFocused,
+.selectLabelFocused,
+.emby-checkbox:focus + .checkboxLabel {
+  color: var(--fullaccent) !important;
+}
+
+.emby-textarea:hover + .textareaLabel,
+.emby-checkbox:hover + .checkboxLabel {
+  color: var(--accent80) !important;
+}
+
+.selectLabel {
+  align-self: center;
+}
+
+/* Switch toggle */
+.mdl-switch__input:checked + .mdl-switch__label + .mdl-switch__trackContainer > .mdl-switch__track {
+  background: var(--accent60);
+}
+
+.mdl-switch__input:checked + .mdl-switch__label + .mdl-switch__trackContainer > .mdl-switch__track + .mdl-switch__thumb {
+  background: var(--fullaccent);
+}
+
+/* Selection panel */
+.selectionCommandsPanel {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: var(--glass-blur);
+}
+
+/* =========================================================================
+   CARDS - BASE STYLING
+   ========================================================================= */
+
+.cardBox-bottompadded {
+  margin-bottom: 0.6em !important;
+}
+
+/* Full rounding for all card elements */
+.blurhash-canvas,
+.cardBox,
+.cardContent,
+.cardOverlayContainer,
+.cardContent-button,
+.cardContent-shadow,
+.cardImage,
+.cardImageContainer,
+.cardOverlayButtonIcon,
+.cardScalable,
+.visualCardBox,
+.cardBox:not(.visualCardBox) .cardPadder {
+  border-radius: var(--rounding-cards);
+}
+
+/* Cards with footer - flat bottom on image */
+.visualCardBox:has(.cardFooter) .blurhash-canvas,
+.visualCardBox:has(.cardFooter) .cardImage,
+.visualCardBox:has(.cardFooter) .coveredImage,
+.visualCardBox:has(.cardFooter) .cardImageContainer,
+.visualCardBox:has(.cardFooter) .cardOverlayContainer,
+.visualCardBox:has(.cardFooter) .sessionNowPlayingInnerContent {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+/* Card footer */
+.cardFooter:not(.visualCardBox-cardFooter) {
+  border-bottom-left-radius: var(--rounding-cards) !important;
+  border-bottom-right-radius: var(--rounding-cards) !important;
+  background: rgba(0, 0, 0, var(--footeropacity)) !important;
+  backdrop-filter: blur(10px);
+  text-align: center;
+  padding: 0.5em 0.75em;
+}
+
+/* Card shadows */
+.libraryPage .cardBox:has(.cardFooter) {
+  box-shadow: var(--cardshadow);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.libraryPage .cardBox:not(:has(.cardFooter)) .cardScalable {
+  box-shadow: var(--cardshadow);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+/* Card image inner glow */
+.libraryPage .cardImageContainer {
+  box-shadow: var(--insettop), var(--insetbottom);
+}
+
+/* Card text */
+.cardPadder {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:not(.cardFooter) > .cardText-first {
+  text-shadow: var(--textshadow) !important;
+  padding-top: 0.5em !important;
+  font-weight: 500;
+}
+
+.cardText-secondary {
+  font-size: 75% !important;
+  text-shadow: var(--textshadow) !important;
+  opacity: 0.8;
+}
+
+/* Card hover buttons */
+.cardOverlayButton:hover {
+  color: var(--fullaccent) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  transform: scale(1.1);
+}
+
+/* =========================================================================
+   CARDS - ANIMATIONS
+   ========================================================================= */
+
+/* TV layout - zoom on focus */
+.layout-tv .card.show-animation:focus .cardBox {
+  transform: scale(1.08);
+  -webkit-transform: scale(1.08);
+  box-shadow: var(--cardglow), var(--cardshadow-hover);
+}
+
+.layout-tv .card.show-animation:focus .cardText-first,
+.layout-tv .card.show-animation:focus .cardText-secondary {
+  color: var(--fullaccent) !important;
+}
+
+/* Desktop/Mobile - glow on hover */
+.overflowBackdropCard:hover .cardScalable,
+.overflowPortraitCard:hover .cardScalable {
+  box-shadow: var(--cardglow), var(--cardshadow) !important;
+  transform: translateY(-4px);
+}
+
+/* Space for animations */
+.layout-desktop .card .cardScalable,
+.layout-mobile .card .cardScalable {
+  margin-left: 0.5em;
+  transition: all var(--transition-normal);
+}
+
+/* =========================================================================
+   CARDS - INDICATORS
+   ========================================================================= */
+
+.cardContent .cardIndicators,
+.mediaSourceIndicator {
+  right: 0.5em !important;
+  top: 0.5em !important;
+}
+
+/* Played indicator */
+.playedIndicator {
+  color: var(--fullaccent) !important;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: var(--rounding-system) !important;
+  padding: 0.2em 0.4em;
+}
+
+/* Count indicator */
+.countIndicator,
+.mediaSourceIndicator {
+  font-weight: 600;
+  font-size: 85%;
+  color: rgba(0, 0, 0, 1);
+  background: var(--fullaccent) !important;
+  border-radius: var(--rounding-system) !important;
+  padding: 0.2em 0.5em;
+}
+
+.playstatebutton-icon-played,
+.ratingbutton-icon-withrating {
+  color: var(--fullaccent) !important;
+}
+
+/* Missing/Unaired indicators */
+.missingIndicator,
+.unairedIndicator {
+  color: #fff;
+  background: rgba(180, 50, 50, 0.9);
+  padding: 0.3em 0.6em;
+  border-radius: var(--rounding-system);
+  font-weight: 600;
+}
+
+/* Multi-select checkbox */
+.multiSelectCheckboxOutline {
+  border-top-left-radius: var(--rounding-cards) !important;
+  border-top-right-radius: var(--rounding-system) !important;
+  border-bottom-right-radius: var(--rounding-system) !important;
+  border-bottom-left-radius: var(--rounding-system) !important;
+}
+
+.Mui-selected {
+  color: var(--accent80) !important;
+}
+
+/* =========================================================================
+   CARDS - PROGRESS BAR
+   ========================================================================= */
+
+.itemProgressBar {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-radius: var(--rounding-cards) !important;
+  height: 0.35em !important;
+  margin: 0.5em 0.8em !important;
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+.itemProgressBarForeground {
+  background: linear-gradient(90deg, var(--accent80), var(--fullaccent)) !important;
+  border-radius: var(--rounding-cards) !important;
+}
+
+/* =========================================================================
+   CARDS - DEFAULT BACKGROUNDS
+   ========================================================================= */
+
+.defaultCardBackground1 { background: hsl(var(--accent-h), calc(var(--accent-s) * 0.3), 18%); }
+.defaultCardBackground2 { background: hsl(var(--accent-h), calc(var(--accent-s) * 0.3), 16%); }
+.defaultCardBackground3 { background: hsl(var(--accent-h), calc(var(--accent-s) * 0.3), 14%); }
+.defaultCardBackground4 { background: hsl(var(--accent-h), calc(var(--accent-s) * 0.3), 12%); }
+.defaultCardBackground5 { background: hsl(var(--accent-h), calc(var(--accent-s) * 0.3), 10%); }
+
+/* =========================================================================
+   LOGIN PAGE
+   ========================================================================= */
+
+#loginPage .btnForgotPassword,
+#loginPage .loginDisclaimerContainer {
+  display: none;
+}
+
+#loginPage .padded-left.padded-right.padded-bottom-page {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  width: 26em;
+  max-width: 90vw;
+  border-radius: var(--rounding-cards);
+  border: var(--glass-border);
+  padding: 2em !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+#loginPage .readOnlyContent,
+#loginPage form {
+  max-width: 22em;
+}
+
+#loginPage .visualLoginForm {
+  padding-top: 1em;
+}
+
+#loginPage .manualLoginForm {
+  padding-top: 1.5em;
+}
+
+#loginPage .squareCard {
+  width: 30%;
+  margin: 0.75em !important;
+}
+
+#loginPage .cardImage {
+  color: var(--fullaccent) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transition: all var(--transition-normal);
+}
+
+#loginPage .squareCard:hover .cardImage,
+#loginPage .squareCard:focus .cardImage {
+  background: var(--accent20) !important;
+  box-shadow: var(--cardglow);
+}
+
+/* =========================================================================
+   HOME PAGE
+   ========================================================================= */
+
+/* Disable slides on TV - poor remote UX */
+.layout-tv #slides-container {
+  display: none !important;
+}
+
+.layout-tv .homeSectionsContainer {
+  top: 0;
+}
+
+/* Scroller alignment */
+#indexPage .homeSectionsContainer .emby-scroller,
+#tvRecommendedPage .verticalSection .itemsContainer-tv {
+  padding-left: 2em;
+}
+
+/* Desktop - content below slides */
+.layout-desktop .homeSectionsContainer {
+  top: 74vh;
+}
+
+/* =========================================================================
+   LIBRARY PAGES
+   ========================================================================= */
+
+.libraryPage,
+#loginPage,
+#indexPage,
+#moviesPage,
+#tvRecommendedPage {
+  padding-top: 5em !important;
+}
+
+/* Center content */
+.libraryPage:not(#indexPage) > .pageTabContent > .itemsContainer {
+  padding-left: 3vw !important;
+  padding-right: 3vw !important;
+}
+
+/* Section titles */
+#indexPage .sectionTitleContainer-cards,
+#tvRecommendedPage .sectionTitleContainer-cards {
+  padding: 0.6em 1em;
+  margin: 0.75em 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--rounding-system);
+  text-align: center;
+}
+
+#tvRecommendedPage .sectionTitleContainer-cards .button-flat:focus {
+  background: transparent !important;
+  color: var(--fullaccent) !important;
+}
+
+.sectionTitleTextButton > .sectionTitle,
+.sectionTitleTextButton > .material-icons {
+  margin: 0;
+}
+
+/* Card spacing */
+.itemsContainer-tv .overflowPortraitCard,
+.itemsContainer-tv .overflowBackdropCard,
+.emby-scroller .overflowPortraitCard,
+.emby-scroller .overflowBackdropCard {
+  margin-left: 0.5em !important;
+  margin-right: 0.5em !important;
+}
+
+.itemsContainer-tv > .overflowBackdropCard {
+  max-width: 28em;
+}
+
+/* Scroller spacing */
+.layout-tv #indexPage .scrollSlider {
+  padding-top: 0.5em !important;
+}
+
+.layout-desktop #indexPage .emby-scroller {
+  padding-top: 1em;
+}
+
+.emby-scrollbuttons {
+  top: 0.85em;
+}
+
+/* Alphabet picker */
+.alphaPickerButton {
+  height: 1.8em;
+  min-width: 1.8em;
+  border-radius: var(--rounding-system);
+  transition: all var(--transition-fast);
+}
+
+.alphaPickerButton:hover {
+  background: var(--accent40) !important;
+}
+
+.alphaPickerButton:focus {
+  background: var(--accent80) !important;
+  transform: none !important;
+}
+
+/* =========================================================================
+   LIBRARY - FILTER & SORTING
+   ========================================================================= */
+
+.pageTabContent > .focuscontainer-x {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  margin-bottom: 1em;
+  padding: 0.4em 0.75em;
+  border-radius: var(--rounding-system);
+  border: var(--glass-border);
+}
+
+.pageTabContent .focuscontainer-x .paper-icon-button-light {
+  transform: none !important;
+}
+
+.listPaging > span {
+  margin-right: 0.5em;
+  opacity: 0.8;
+}
+
+.filterIndicator {
+  background: var(--fullaccent) !important;
+  color: black;
+  font-weight: 600;
+}
+
+.radio-label-block {
+  margin: 1em !important;
+}
+
+/* =========================================================================
+   LIBRARY - CONTINUE WATCHING & NEXT UP
+   ========================================================================= */
+
+/* Hide series title for episodes */
+.ContinueWatching .overflowBackdropCard[data-type="Episode"] .cardText-first,
+.NextUp .overflowBackdropCard[data-type="Episode"] .cardText-first {
+  display: none;
+}
+
+/* Inflate episode name */
+.ContinueWatching .overflowBackdropCard[data-type="Episode"] .cardText-secondary,
+.NextUp .overflowBackdropCard[data-type="Episode"] .cardText-secondary {
+  font-size: 100% !important;
+  padding-top: 0.5em !important;
+  color: inherit;
+  opacity: 1;
+}
+
+/* Hide movie year */
+.ContinueWatching .overflowBackdropCard[data-type="Movie"] .cardText-secondary,
+.NextUp .overflowBackdropCard[data-type="Movie"] .cardText-secondary {
+  display: none;
+}
+
+/* =========================================================================
+   LIBRARY - VIEW MODES
+   ========================================================================= */
+
+/* Banner view */
+.itemsContainer > .bannerCard {
+  padding-bottom: 1.5vh !important;
+  padding-right: 1vw !important;
+}
+
+.itemsContainer > .bannerCard:hover > .cardBox {
+  box-shadow: var(--cardglow), var(--cardshadow) !important;
+}
+
+/* List view */
+.itemsContainer > .listItem-focusscale:not(.listItem-largeImage) {
+  border: var(--buttonborder) !important;
+  border-radius: var(--rounding-media);
+  background: rgba(0, 0, 0, 0.3) !important;
+  padding: 0.5em 1em 0.5em 0 !important;
+  margin-bottom: 0.5em;
+  height: 5em;
+  transition: all var(--transition-fast);
+}
+
+.itemsContainer > .listItem-focusscale:not(.listItem-largeImage):hover {
+  border-color: var(--accent40) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.itemsContainer > .listItem-focusscale:not(.listItem-largeImage):focus {
+  box-shadow: var(--buttonglow) !important;
+  border-color: var(--accent80) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+.itemsContainer > .listItem-focusscale:not(.listItem-largeImage) .listItemImage {
+  height: 5em;
+  width: 10em;
+  top: 0.3em;
+  border-radius: var(--rounding-system);
+}
+
+/* Hide alpha picker in list view */
+.itemsContainer:has(.listItem-focusscale) ~ .alphaPicker,
+#moviesPage:has(.listItem-focusscale) .alphaPicker {
+  display: none !important;
+}
+
+/* Poster view */
+.itemsContainer > .portraitCard:not(:has(.cardFooter)) {
+  padding-bottom: 1.5vh !important;
+  padding-right: 1vw !important;
+}
+
+.itemsContainer > .portraitCard:not(:has(.cardFooter)):hover .cardScalable {
+  box-shadow: var(--cardglow), var(--cardshadow) !important;
+}
+
+/* Poster card view */
+.itemsContainer > .portraitCard:has(.cardFooter) {
+  padding-bottom: 1.5vh !important;
+  padding-right: 1vw !important;
+}
+
+.itemsContainer > .portraitCard:has(.cardFooter):hover .cardBox {
+  box-shadow: var(--cardglow), var(--cardshadow) !important;
+}
+
+/* Thumb view */
+.itemsContainer > .backdropCard:not(:has(.cardFooter)) {
+  padding-bottom: 1.5vh !important;
+  padding-right: 1vw !important;
+}
+
+.itemsContainer > .backdropCard:not(:has(.cardFooter)):hover .cardScalable {
+  box-shadow: var(--cardglow), var(--cardshadow) !important;
+}
+
+/* Thumb card view */
+.itemsContainer > .backdropCard:has(.cardFooter) {
+  padding-bottom: 1.5vh !important;
+  padding-right: 1vw !important;
+}
+
+.itemsContainer > .backdropCard:has(.cardFooter):hover .cardBox {
+  box-shadow: var(--cardglow), var(--cardshadow) !important;
+}
+
+/* =========================================================================
+   MEDIA DETAIL PAGES
+   ========================================================================= */
+
+/* Hide elements on TV */
+.layout-tv .itemExternalLinks,
+.layout-tv .detailsGroupItem.directorsGroup,
+.layout-tv .detailsGroupItem.writersGroup,
+.layout-tv .detailsGroupItem.studiosGroup,
+.layout-tv .hide + .detailPageWrapperContainer .itemName,
+.layout-tv .endsAt,
+.layout-tv .itemTags {
+  display: none !important;
+}
+
+/* Move content up on TV */
+.layout-tv .detailPagePrimaryContainer {
+  display: block;
+  padding-top: 5vh;
+}
+
+/* Season/Series titles */
+.selfBackdropPage h3.itemName.infoText.subtitle.focuscontainer-x {
+  font-size: 140%;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.selfBackdropPage h1.parentName.focuscontainer-x {
+  font-size: 150%;
+  font-weight: 700;
+}
+
+/* Poster image */
+.detailImageContainer .card {
+  max-width: 24vw;
+  left: 3% !important;
+  border-radius: var(--rounding-cards);
+  box-shadow: var(--cardshadow) !important;
+}
+
+.layout-tv .detailImageContainer .card {
+  top: 1vh !important;
+}
+
+/* Detail ribbon */
+.detailRibbon {
+  padding-right: 2% !important;
+}
+
+.layout-desktop .detailRibbon {
+  height: 9em !important;
+  margin-top: -9em !important;
+  background: rgba(0, 0, 0, var(--headeropacity)) !important;
+  backdrop-filter: var(--glass-blur);
+  border-top: var(--glass-border);
+}
+
+.infoWrapper {
+  padding-bottom: 0.15em;
+}
+
+.itemMiscInfo {
+  font-size: 120%;
+  margin-top: 0.25em;
+  margin-bottom: 0.6em;
+  opacity: 0.9;
+}
+
+/* Media details container */
+.layout-tv .detailPagePrimaryContent {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.layout-desktop .detailPagePrimaryContent {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+/* Hide genres */
+p.itemGenres {
+  display: none;
+}
+
+/* Track selection */
+.trackSelections {
+  max-width: 100%;
+  width: 60%;
+  padding: 0.5em 0;
+}
+
+.detailTrackSelect {
+  background: transparent !important;
+  padding: 0.35em 1.9em 0.35em 0.35em !important;
+}
+
+/* Description */
+.detailPageSecondaryContainer {
+  padding-top: 0 !important;
+}
+
+.overview.detail-clamp-text {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.itemDetailsGroup {
+  margin-top: 0.5em;
+  padding-bottom: 1em;
+}
+
+/* Section titles in detail pages */
+.detailPagePrimaryContainer .sectionTitle,
+.detailPageSecondaryContainer .sectionTitle {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--rounding-system) !important;
+  padding: 0.4em 0.75em !important;
+  margin: 0.5em 0 !important;
+  font-weight: 600;
+}
+
+/* Section scroller spacing */
+.layout-tv .detailVerticalSection {
+  margin-bottom: 1em !important;
+}
+
+.detailPageSecondaryContainer .itemsContainer-tv {
+  margin-left: 1em !important;
+}
+
+.detailPagePrimaryContainer #childrenContent .itemsContainer-tv,
+.detailPageSecondaryContainer #childrenContent .itemsContainer-tv {
+  padding-top: 0.5em;
+}
+
+.detailPageSecondaryContainer .verticalSection .emby-scroller:has(.overflowPortraitCard:not(.personCard)) {
+  padding-top: 2em;
+}
+
+/* Mobile section titles */
+.layout-mobile :not(.sectionTitleContainer-cards) > .sectionTitle-cards {
+  padding-top: 0;
+}
+
+.layout-mobile .sectionTitleTextButton > .material-icons {
+  padding-top: 0.2em;
+}
+
+/* Large list items (episodes) */
+.listItem-largeImage {
+  border: var(--buttonborder) !important;
+  border-radius: var(--rounding-media);
+  margin-bottom: 1em;
+  margin-right: 0.5em;
+  padding: 0;
+  background: transparent !important;
+  height: 14em;
+  transition: all var(--transition-fast);
+}
+
+.listItem-largeImage:hover {
+  border-color: var(--accent40) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.listItem-largeImage:focus {
+  box-shadow: var(--buttonglow) !important;
+  border-color: var(--accent80) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.listItem-largeImage .listItemBody {
+  align-self: normal;
+  padding: 0.5em;
+}
+
+.listItem-largeImage .listItemBodyText {
+  max-height: 9em;
+}
+
+.listItem-button:focus .listItemBodyText:not(.secondary) {
+  color: var(--fullaccent) !important;
+}
+
+.listItemImage-large {
+  max-height: 14em;
+  border-radius: var(--rounding-system);
+}
+
+.listItemIndicators {
+  left: 0.5em;
+  top: 0.5em;
+}
+
+/* =========================================================================
+   PLAYER OSD
+   ========================================================================= */
+
+/* Hide elements */
+.btnFullscreen,
+.btnPip,
+.videoOsdBottom .endsAtText {
+  display: none;
+}
+
+/* Media info */
+.osdTitle {
+  margin-left: 0.5em;
+  font-weight: 600;
+}
+
+.startTimeText,
+.endTimeText {
+  width: 3.5em;
+  display: block;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.osdPoster img {
+  border-radius: var(--rounding-media);
+}
+
+.osdTextContainer {
+  margin: 0 !important;
+  margin-top: 0.2em !important;
+  padding: 0 0.5em !important;
+}
+
+/* Media buttons */
+.ltr > .paper-icon-button-light:focus {
+  transform: scale(1.15) !important;
+  -webkit-transform: scale(1.15) !important;
+}
+
+.volumeButtons > .paper-icon-button-light:focus,
+.osdControls > .focuscontainer-x > .paper-icon-button-light:focus {
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+/* Skip button */
+.skip-button {
+  border-radius: var(--rounding-system);
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: var(--buttonborder) !important;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-fast);
+}
+
+.skip-button:hover {
+  color: var(--accent80) !important;
+  border-color: var(--accent40) !important;
+}
+
+.skip-button:focus {
+  color: var(--fullaccent) !important;
+  border-color: var(--accent80) !important;
+  box-shadow: var(--buttonglow);
+}
+
+/* OSD header */
+.osdHeader {
+  height: 3.5em !important;
+  backdrop-filter: var(--glass-blur);
+}
+
+/* OSD footer */
+.videoOsdBottom {
+  background: rgba(0, 0, 0, var(--headeropacity)) !important;
+  backdrop-filter: var(--glass-blur);
+  padding: 0.5em 0 0.75em;
+}
+
+@media all and (min-width: 105em) {
+  .videoOsdBottom {
+    margin: 0 auto 2em;
+    max-width: 52vw;
+    border-radius: var(--rounding-cards);
+    border: var(--glass-border);
+  }
+}
+
+.buttons.focuscontainer-x {
+  padding-top: 0.5em;
+}
+
+/* Progress bar */
+.mdl-slider {
+  color: var(--fullaccent) !important;
+}
+
+.mdl-slider::-webkit-slider-thumb {
+  background: var(--fullaccent) !important;
+  box-shadow: 0 0 8px var(--accent60);
+}
+
+.mdl-slider::-moz-range-thumb {
+  background: var(--fullaccent) !important;
+  box-shadow: 0 0 8px var(--accent60);
+}
+
+.mdl-slider::-webkit-scrollbar-corner,
+.mdl-slider::-webkit-scrollbar-track-piece {
+  background: transparent !important;
+}
+
+/* Progress markers */
+.sliderMarker {
+  width: 3px;
+  border-radius: 2px;
+}
+
+.sliderMarker.watched {
+  background: var(--fullaccent) !important;
+}
+
+.iconOsdProgressInner {
+  background: linear-gradient(90deg, var(--accent80), var(--fullaccent)) !important;
+}
+
+/* Chapter thumbnails */
+.chapterThumbContainer {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border-radius: var(--rounding-media) !important;
+}
+
+.chapterThumb {
+  height: 14vh;
+  min-width: 14vh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border-radius: var(--rounding-media) !important;
+}
+
+.sliderBubble {
+  background: transparent;
+  transform: translate3d(-50%, -108%, 0);
+  -webkit-transform: translate3d(-50%, -108%, 0);
+}
+
+.chapterThumbTextContainer {
+  right: auto;
+  bottom: 4px;
+  padding: 0.25em 0.7em;
+  border-radius: var(--rounding-system) !important;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.chapterThumbText {
+  font-size: 1em;
+  font-weight: 500;
+}
+
+/* =========================================================================
+   UP NEXT DIALOG
+   ========================================================================= */
+
+.upNextContainer {
+  padding: 1.25em;
+  border-radius: var(--rounding-cards) !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--cardglow), 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.upNextDialog-poster-img {
+  border-radius: var(--rounding-media) !important;
+}
+
+.upNextDialog-countdownText {
+  color: var(--fullaccent) !important;
+  font-weight: 600;
+}
+
+.upNextDialog-button {
+  margin-left: 0.5em;
+  background: transparent;
+  border-radius: var(--rounding-system) !important;
+  border: var(--buttonborder) !important;
+  transition: all var(--transition-fast);
+}
+
+.upNextDialog-button:hover {
+  color: var(--fullaccent) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-color: var(--accent40) !important;
+}
+
+.upNextDialog-button:focus {
+  color: var(--fullaccent) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-color: var(--accent80) !important;
+  box-shadow: var(--buttonglow) !important;
+}
+
+/* =========================================================================
+   SETTINGS & PREFERENCES
+   ========================================================================= */
+
+#myPreferencesMenuPage {
+  justify-content: center;
+  display: flex;
+  padding-top: 5em !important;
+}
+
+.settingsContainer .sectionTitle,
+.homeScreenSettingsContainer .sectionTitle {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--rounding-system) !important;
+  padding: 0.4em 0.75em;
+  margin: 0.5em 0;
+}
+
+.listItemButton,
+.listItemImageButton {
+  border-radius: var(--rounding-system) !important;
+  transition: background var(--transition-fast);
+}
+
+.listItemButton:hover,
+.listItemImageButton:hover {
+  background: var(--accent10) !important;
+}
+
+.listItemIcon {
+  background: transparent !important;
+  border-radius: var(--rounding-system) !important;
+}
+
+/* Subtitle preview */
+.subtitleappearance-preview {
+  background: linear-gradient(135deg, var(--accent80), rgba(20, 20, 20, 0.9)) !important;
+  border-radius: var(--rounding-media) !important;
+  border: var(--glass-border);
+}
+
+/* Settings page layout */
+#userProfilePage,
+#quickConnectPreferencesPage {
+  justify-content: center;
+  display: flex;
+  text-align: center;
+}
+
+#myPreferencesMenuPage,
+#quickConnectPreferencesPage,
+#displayPreferencesPage,
+#homeScreenPreferencesPage,
+#languagePreferencesPage,
+#searchPage {
+  padding-top: 5em !important;
+}
+
+#homeScreenPreferencesPage .verticalSection-extrabottompadding,
+#languagePreferencesPage .verticalSection-extrabottompadding {
+  margin-bottom: 0;
+}
+
+#languagePreferencesPage .selectContainer,
+#displayPreferencesPage .inputContainer {
+  margin-bottom: 1em;
+}
+
+#displayPreferencesPage .checkboxContainer,
+#displayPreferencesPage .selectContainer,
+#homeScreenPreferencesPage .selectContainer,
+#homeScreenPreferencesPage .checkboxContainer,
+#homeScreenPreferencesPage .checkboxListContainer,
+#languagePreferencesPage .checkboxContainer {
+  margin-bottom: 1.25em;
+}
+
+#displayPreferencesPage .btnSave,
+#homeScreenPreferencesPage .btnSave,
+#languagePreferencesPage .btnSave {
+  margin-top: 2em;
+}
+
+#searchPage .searchFieldsInner {
+  padding-bottom: 1em;
+}
+
+#searchPage .sectionTitle {
+  padding: 0.4em 0.75em;
+  margin: 0.5em 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--rounding-system);
+  text-align: center;
+}
+
+.searchSuggestionsList > div:hover,
+.searchSuggestionsList > div:has(.emby-button:focus) {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--rounding-system);
+}
+
+/* =========================================================================
+   USER PROFILE
+   ========================================================================= */
+
+.formDialogHeaderTitle {
+  margin-left: 1em;
+}
+
+.formDialogContent {
+  margin-bottom: 5em;
+}
+
+.dialogContentInner {
+  padding: 0.5em 1em 1em;
+}
+
+.listItem-indexnumberleft {
+  margin: 1em;
+}
+
+.updatePasswordForm br {
+  display: none;
+}
+
+.updatePasswordForm .inputContainer {
+  margin-bottom: 1em;
+}
+
+.updatePasswordForm .emby-button.block {
+  margin-top: 2em;
+}
+
+.imagePlaceHolder {
+  border: var(--buttonborder) !important;
+  border-radius: var(--rounding-cards);
+  transition: all var(--transition-fast);
+}
+
+.imagePlaceHolder:hover {
+  border-color: var(--accent40) !important;
+}
+
+h2.username {
+  margin-top: 0;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* =========================================================================
+   CAST & CREW - SMALLER THUMBNAILS
+   ========================================================================= */
+
+/* Center cast card images */
+.personCard > .cardBox > .cardScalable {
+  margin-left: 0.2em;
+}
+
+/* Responsive cast thumbnail sizing */
+@media all and (min-width: 131.25em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 7.3vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(6.3vw - 1.75em) !important;
+    height: 6.3vw !important;
+  }
+}
+
+@media all and (min-width: 120em) and (max-width: 131.25em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 6.4vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(6.4vw - 1.75em) !important;
+    height: 6.4vw !important;
+  }
+}
+
+@media all and (min-width: 100em) and (max-width: 120em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 8.6vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(7.6vw - 1.75em) !important;
+    height: 7.6vw !important;
+  }
+}
+
+@media all and (min-width: 87.5em) and (max-width: 100em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 9.3vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(9.3vw - 1.75em) !important;
+    height: 9.3vw !important;
+  }
+}
+
+@media all and (min-width: 75em) and (max-width: 87.5em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 10.5vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(10.5vw - 1.75em) !important;
+    height: 10.5vw !important;
+  }
+}
+
+@media all and (min-width: 50em) and (max-width: 75em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 15vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(15vw - 1.75em) !important;
+    height: 15vw !important;
+  }
+}
+
+@media all and (min-width: 43.75em) and (max-width: 50em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 20.1vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(20.1vw - 1.75em) !important;
+    height: 20.1vw !important;
+  }
+}
+
+@media all and (min-width: 25em) and (max-width: 43.75em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 31.2vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(31.2vw - 1.75em) !important;
+    height: 31.2vw !important;
+  }
+}
+
+@media all and (max-width: 25em) {
+  #guestCastContent .card.overflowPortraitCard,
+  #castContent .card.overflowPortraitCard {
+    width: 40vw !important;
+    font-size: 90% !important;
+  }
+  #guestCastContent .cardScalable,
+  #castContent .cardScalable {
+    width: calc(40vw - 1.75em) !important;
+    height: 40vw !important;
+  }
+}
+
+/* =========================================================================
+   MISCELLANEOUS
+   ========================================================================= */
+
+.paperList {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--rounding-system) !important;
+  border: var(--glass-border);
+}
+
+.itemSelectionPanel {
+  border: 2px solid var(--accent40) !important;
+  border-radius: var(--rounding-cards) !important;
+  background: var(--accent10) !important;
+}
+
+.fab {
+  border-radius: var(--rounding-system) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(10px);
+  border: var(--glass-border);
+  transition: all var(--transition-fast);
+}
+
+.fab:hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  box-shadow: var(--buttonglow);
+}
+
+.taskProgressInner,
+.mdl-slider-background-lower {
+  background: linear-gradient(90deg, var(--accent80), var(--fullaccent)) !important;
+}
+
+.itemDetailImage,
+.primaryImageWrapper > img {
+  border-radius: var(--rounding-cards) !important;
+}
+
+.syncPlayIconCircle {
+  color: var(--fullaccent) !important;
+}
+
+/* =========================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ========================================================================= */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast focus states */
+*:focus-visible {
+  outline: 2px solid var(--fullaccent);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   END OF THEME
+   ========================================================================= */
