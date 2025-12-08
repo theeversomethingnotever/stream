@@ -325,14 +325,20 @@ body {
   border-color: var(--fullaccent) !important;
 }
 
-/* Single color spinner variant */
-.mdl-spinner--single-color .mdl-spinner__layer {
+/* Spinner circle */
+.mdl-spinner__circle {
   border-color: var(--fullaccent) !important;
 }
 
-/* Add subtle glow to active spinner */
-.mdl-spinner.is-active {
-  filter: drop-shadow(0 0 8px var(--accent40));
+/* Active spinner animation */
+.mdlSpinnerActive .mdl-spinner__circleLeft,
+.mdl-spinner.is-active .mdl-spinner__circleLeft {
+  border-color: var(--fullaccent) !important;
+}
+
+.mdlSpinnerActive .mdl-spinner__circleRight,
+.mdl-spinner.is-active .mdl-spinner__circleRight {
+  border-color: var(--fullaccent) !important;
 }
 
 /* Progress Ring */
@@ -340,14 +346,8 @@ body {
   margin: 0.4em;
 }
 
-.progressring-bg {
-  stroke: rgba(255, 255, 255, 0.1) !important;
-}
-
 .progressring-spiner {
-  stroke: var(--fullaccent) !important;
-  border-color: var(--fullaccent);
-  border-width: 0.35em;
+  border-color: var(--fullaccent) !important;
 }
 
 /* =========================================================================
@@ -837,12 +837,10 @@ body {
 /* Card shadows */
 .libraryPage .cardBox:has(.cardFooter) {
   box-shadow: var(--cardshadow);
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
 }
 
 .libraryPage .cardBox:not(:has(.cardFooter)) .cardScalable {
   box-shadow: var(--cardshadow);
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
 }
 
 /* Card image inner glow */
@@ -895,14 +893,12 @@ body {
 .overflowBackdropCard:hover .cardScalable,
 .overflowPortraitCard:hover .cardScalable {
   box-shadow: var(--cardglow), var(--cardshadow) !important;
-  transform: translateY(-4px);
 }
 
 /* Space for animations */
 .layout-desktop .card .cardScalable,
 .layout-mobile .card .cardScalable {
   margin-left: 0.5em;
-  transition: all var(--transition-normal);
 }
 
 /* =========================================================================
@@ -2113,51 +2109,12 @@ h2.username {
 }
 
 /* =========================================================================
-   SKELETON LOADING - Content Placeholders
-   ========================================================================= */
-
-/* Skeleton shimmer effect ONLY for empty containers (no image loaded yet) */
-.cardImageContainer:empty::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 100%
-  );
-  background-size: 200% 100%;
-  animation: skeletonShimmer 1.5s ease-in-out infinite;
-}
-
-@keyframes skeletonShimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* =========================================================================
    VIDEO PLAYER - Buffering Indicator
    ========================================================================= */
 
-/* Buffering spinner overlay */
+/* Buffering spinner overlay - accent color */
 .videoOsdBottom .osdMediaStatus .material-icons {
-  animation: bufferPulse 1s ease-in-out infinite;
-}
-
-@keyframes bufferPulse {
-  0%, 100% { opacity: 0.5; transform: scale(0.95); }
-  50% { opacity: 1; transform: scale(1); }
-}
-
-/* Streaming quality indicator glow */
-.mediaSourceIndicator {
-  animation: qualityPulse 3s ease-in-out infinite;
-}
-
-@keyframes qualityPulse {
-  0%, 100% { box-shadow: 0 0 0 0 var(--accent40); }
-  50% { box-shadow: 0 0 8px 2px var(--accent40); }
+  color: var(--fullaccent);
 }
 
 /* =========================================================================
