@@ -43,7 +43,7 @@ body, h1, h2, h3, h4, button, input, select, textarea {
   /* ===== BACKGROUND IMAGE =====
      Premium cinematic background - dark with subtle blue/purple tones
      Replace with your own image URL */
-  --bgImage: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1920&q=80");
+  --bgImage: url("https://cdn.jsdelivr.net/gh/theeversomethingnotever/stream@latest/background_neon.jpg");
   --bgdarkness: 0.80;
 
   /* ===== TRANSPARENCY LEVELS ===== */
