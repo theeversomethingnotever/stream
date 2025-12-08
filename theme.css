@@ -1124,9 +1124,27 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Hide any text in disclaimer, show only buttons/forms */
+/* =================== hiding stuff: Hide any text in disclaimer, show only buttons/forms */
 #loginPage .loginDisclaimerContainer > *:not(form):not(button):not(.emby-button) {
-  display: none;
+  /*display: none;*/
+}
+
+.updatePasswordForm {
+  display: none !important;
+}
+
+.btnForgotPassword {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+a.raised.emby-button {
+    padding:0.9em 1em;
+    color: inherit !important;
+}
+
+.disclaimerContainer{
+    display: block;
 }
 
 /* SSO Button styling */
