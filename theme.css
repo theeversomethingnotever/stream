@@ -2256,10 +2256,10 @@ h2.username {
   animation: skeletonShimmer 1.5s ease-in-out infinite;
 }
 
-@keyframes skeletonShimmer {
+/*@keyframes skeletonShimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
-}
+}*/
 
 /* =========================================================================
    VIDEO PLAYER - Buffering Indicator
