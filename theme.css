@@ -41,9 +41,10 @@ body, h1, h2, h3, h4, button, input, select, textarea {
   --accent-l: 50%;
 
   /* ===== BACKGROUND IMAGE =====
+     Premium cinematic background - dark with subtle blue/purple tones
      Replace with your own image URL */
-  --bgImage: url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920");
-  --bgdarkness: 0.75;
+  --bgImage: url("https://cdn.jsdelivr.net/gh/theeversomethingnotever/stream@latest/background_neon.jpg");
+  --bgdarkness: 0.80;
 
   /* ===== TRANSPARENCY LEVELS ===== */
   --headeropacity: 0.85;
@@ -312,7 +313,93 @@ body {
   border: var(--glass-border);
 }
 
-/* Loading Spinner */
+/* =========================================================================
+   LOADING ANIMATION - Streaming Service Style
+   ========================================================================= */
+
+/* Hide default spinner */
+.mdl-spinner {
+  display: none !important;
+}
+
+/* Custom loading container */
+.docspinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+/* Pulsing ring loader - Netflix/Disney+ style */
+.docspinner::before,
+.docspinner::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.docspinner::before {
+  border: 3px solid transparent;
+  border-top-color: var(--fullaccent);
+  border-right-color: var(--fullaccent);
+  animation: spinnerRotate 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+
+.docspinner::after {
+  border: 3px solid transparent;
+  border-bottom-color: var(--accent60);
+  border-left-color: var(--accent60);
+  animation: spinnerRotate 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite reverse;
+  animation-delay: 0.2s;
+  width: 45px;
+  height: 45px;
+}
+
+@keyframes spinnerRotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Full page loading overlay */
+.loading-spinner,
+.preloader {
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.95) 100%) !important;
+}
+
+/* Loading text pulse */
+.loading-spinner::after {
+  content: '';
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--fullaccent), transparent);
+  border-radius: 2px;
+  animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateX(-50%) scaleX(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+/* Streaming-style three dot loader */
 .mdl-spinner__layer-1,
 .mdl-spinner__layer-2,
 .mdl-spinner__layer-3,
@@ -320,9 +407,57 @@ body {
   border-color: var(--fullaccent) !important;
 }
 
-/* Progress Ring */
+/* Alternative: Three bouncing dots (add class 'streaming-loader' to use) */
+.streaming-loader {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.streaming-loader span {
+  width: 12px;
+  height: 12px;
+  background: var(--fullaccent);
+  border-radius: 50%;
+  animation: dotBounce 1.4s ease-in-out infinite both;
+}
+
+.streaming-loader span:nth-child(1) { animation-delay: -0.32s; }
+.streaming-loader span:nth-child(2) { animation-delay: -0.16s; }
+.streaming-loader span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Progress Ring - Enhanced */
 .progressring {
   margin: 0.4em;
+  position: relative;
+}
+
+.progressring::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(var(--fullaccent), var(--accent20));
+  animation: progressGlow 2s linear infinite;
+  opacity: 0.5;
+  filter: blur(8px);
+}
+
+@keyframes progressGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .progressring-bg {
@@ -977,9 +1112,84 @@ body {
    LOGIN PAGE
    ========================================================================= */
 
-#loginPage .btnForgotPassword,
-#loginPage .loginDisclaimerContainer {
+/* Hide forgot password only - keep disclaimer for SSO */
+#loginPage .btnForgotPassword {
   display: none;
+}
+
+/* Login disclaimer - style for SSO button */
+#loginPage .loginDisclaimerContainer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hide any text in disclaimer, show only buttons/forms */
+#loginPage .loginDisclaimerContainer > *:not(form):not(button):not(.emby-button) {
+  display: none;
+}
+
+/* SSO Button styling */
+#loginPage .loginDisclaimerContainer form {
+  width: 100%;
+  margin: 0;
+}
+
+#loginPage .loginDisclaimerContainer .emby-button,
+#loginPage .loginDisclaimerContainer button {
+  width: 100%;
+  margin: 0.5em 0 0 0;
+  padding: 0.85em 1.5em;
+  font-size: 1em;
+  font-weight: 600;
+  border-radius: var(--rounding-system);
+  border: 2px solid var(--accent60) !important;
+  background: linear-gradient(135deg, var(--accent20) 0%, transparent 100%) !important;
+  color: #fff;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+#loginPage .loginDisclaimerContainer .emby-button::before,
+#loginPage .loginDisclaimerContainer button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent40) 0%, var(--accent20) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+#loginPage .loginDisclaimerContainer .emby-button:hover,
+#loginPage .loginDisclaimerContainer button:hover {
+  border-color: var(--accent80) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), var(--buttonglow);
+}
+
+#loginPage .loginDisclaimerContainer .emby-button:hover::before,
+#loginPage .loginDisclaimerContainer button:hover::before {
+  opacity: 1;
+}
+
+#loginPage .loginDisclaimerContainer .emby-button:focus,
+#loginPage .loginDisclaimerContainer button:focus {
+  border-color: var(--fullaccent) !important;
+  box-shadow: 0 0 0 3px var(--accent20), var(--buttonglow);
+  outline: none;
+}
+
+/* Divider text "or" between login methods */
+#loginPage .loginDisclaimerContainer::before {
+  content: 'or sign in with';
+  display: block;
+  text-align: center;
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 #loginPage .padded-left.padded-right.padded-bottom-page {
@@ -1995,6 +2205,73 @@ h2.username {
 
 .syncPlayIconCircle {
   color: var(--fullaccent) !important;
+}
+
+/* =========================================================================
+   SKELETON LOADING - Content Placeholders
+   ========================================================================= */
+
+/* Skeleton shimmer effect for loading cards */
+.blurhash-canvas,
+.card-img-placeholder,
+.cardImageContainer:empty {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =========================================================================
+   VIDEO PLAYER - Buffering Indicator
+   ========================================================================= */
+
+/* Buffering spinner overlay */
+.videoOsdBottom .osdMediaStatus .material-icons {
+  animation: bufferPulse 1s ease-in-out infinite;
+}
+
+@keyframes bufferPulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Custom buffering ring for video player */
+.htmlvideoplayer:not(.playing) .videoElement::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  margin: -30px 0 0 -30px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--fullaccent);
+  border-radius: 50%;
+  animation: bufferingSpin 0.8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes bufferingSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Streaming quality indicator glow */
+.mediaSourceIndicator {
+  animation: qualityPulse 3s ease-in-out infinite;
+}
+
+@keyframes qualityPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent40); }
+  50% { box-shadow: 0 0 8px 2px var(--accent40); }
 }
 
 /* =========================================================================
