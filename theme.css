@@ -317,69 +317,43 @@ body {
    LOADING ANIMATION - Streaming Service Style
    ========================================================================= */
 
-/* Style the MDL spinner container */
+/* MDL Spinner - make sure it's visible and styled */
 .mdl-spinner {
-  width: 56px !important;
-  height: 56px !important;
+  display: inline-block !important;
+  position: relative !important;
+  width: 64px !important;
+  height: 64px !important;
 }
 
 /* Override MDL spinner colors - all layers use accent color */
-.mdl-spinner__layer,
-.mdl-spinner__layer-1,
-.mdl-spinner__layer-2,
-.mdl-spinner__layer-3,
-.mdl-spinner__layer-4 {
-  border-color: var(--fullaccent) !important;
-}
-
-/* Make spinner single color (Netflix/Disney+ style) */
-.mdl-spinner--single-color .mdl-spinner__layer,
 .mdl-spinner .mdl-spinner__layer {
   border-color: var(--fullaccent) !important;
 }
 
-/* Spinner circle styling */
-.mdl-spinner__circle-clipper .mdl-spinner__circle {
-  border-width: 4px !important;
-  border-color: var(--fullaccent) transparent transparent transparent !important;
+.mdl-spinner__layer-1 {
+  border-color: var(--fullaccent) !important;
 }
 
-/* Add glow effect to spinner */
+.mdl-spinner__layer-2 {
+  border-color: var(--accent80) !important;
+}
+
+.mdl-spinner__layer-3 {
+  border-color: var(--accent60) !important;
+}
+
+.mdl-spinner__layer-4 {
+  border-color: var(--fullaccent) !important;
+}
+
+/* Single color mode */
+.mdl-spinner--single-color .mdl-spinner__layer {
+  border-color: var(--fullaccent) !important;
+}
+
+/* Add glow effect to active spinner */
 .mdl-spinner.is-active {
-  filter: drop-shadow(0 0 8px var(--accent60));
-}
-
-/* Full page loading overlay - enhanced */
-.loading-spinner,
-.docspinner,
-.preloader {
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.95) 100%) !important;
-}
-
-/* Pulsing glow behind spinner */
-.mdl-spinner.is-active::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80px;
-  height: 80px;
-  margin: -40px 0 0 -40px;
-  border-radius: 50%;
-  background: var(--accent20);
-  animation: spinnerGlow 1.5s ease-in-out infinite;
-  z-index: -1;
-}
-
-@keyframes spinnerGlow {
-  0%, 100% {
-    transform: scale(0.8);
-    opacity: 0.3;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.6;
-  }
+  filter: drop-shadow(0 0 10px var(--accent60));
 }
 
 /* Progress Ring - Enhanced */
@@ -388,29 +362,12 @@ body {
   position: relative;
 }
 
-.progressring::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: conic-gradient(var(--fullaccent), var(--accent20));
-  animation: progressGlow 2s linear infinite;
-  opacity: 0.5;
-  filter: blur(8px);
-}
-
-@keyframes progressGlow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .progressring-bg {
-  display: none;
+  stroke: rgba(255, 255, 255, 0.1) !important;
 }
 
 .progressring-spiner {
-  border-color: var(--fullaccent);
-  border-width: 0.35em;
+  stroke: var(--fullaccent) !important;
 }
 
 /* =========================================================================
@@ -2179,10 +2136,11 @@ h2.username {
    SKELETON LOADING - Content Placeholders
    ========================================================================= */
 
-/* Skeleton shimmer effect for loading cards */
-.blurhash-canvas,
-.card-img-placeholder,
-.cardImageContainer:empty {
+/* Skeleton shimmer effect ONLY for empty containers (no image loaded yet) */
+.cardImageContainer:empty::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.03) 0%,
