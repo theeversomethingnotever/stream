@@ -1213,7 +1213,6 @@ a.raised.emby-button {
 
 /* Divider text "or" between login methods */
 #loginPage .loginDisclaimerContainer::before {
-  content: 'or sign in with';
   display: block;
   width: 100%;
   text-align: center;
