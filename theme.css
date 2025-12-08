@@ -43,7 +43,7 @@ body, h1, h2, h3, h4, button, input, select, textarea {
   /* ===== BACKGROUND IMAGE =====
      Premium cinematic background - dark with subtle blue/purple tones
      Replace with your own image URL */
-  --bgImage: url("https://cdn.jsdelivr.net/gh/theeversomethingnotever/stream@latest/background_neon.jpg");
+  --bgImage: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1920&q=80");
   --bgdarkness: 0.80;
 
   /* ===== TRANSPARENCY LEVELS ===== */
@@ -1122,9 +1122,13 @@ body {
   margin-top: 1.5em;
   padding-top: 1.5em;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
-/* =================== hiding stuff: Hide any text in disclaimer, show only buttons/forms */
+/* Hide any text in disclaimer, show only buttons/forms */
 #loginPage .loginDisclaimerContainer > *:not(form):not(button):not(.emby-button) {
   /*display: none;*/
 }
@@ -1147,16 +1151,23 @@ a.raised.emby-button {
     display: block;
 }
 
-/* SSO Button styling */
+
+
+
+
+/* SSO Form & Button - centered */
 #loginPage .loginDisclaimerContainer form {
   width: 100%;
   margin: 0;
+  display: flex;
+  justify-content: center;
 }
 
 #loginPage .loginDisclaimerContainer .emby-button,
 #loginPage .loginDisclaimerContainer button {
   width: 100%;
-  margin: 0.5em 0 0 0;
+  max-width: 100%;
+  margin: 0;
   padding: 0.85em 1.5em;
   font-size: 1em;
   font-weight: 600;
@@ -1167,6 +1178,7 @@ a.raised.emby-button {
   transition: all var(--transition-fast);
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 #loginPage .loginDisclaimerContainer .emby-button::before,
@@ -1177,6 +1189,7 @@ a.raised.emby-button {
   background: linear-gradient(135deg, var(--accent40) 0%, var(--accent20) 100%);
   opacity: 0;
   transition: opacity var(--transition-fast);
+  z-index: -1;
 }
 
 #loginPage .loginDisclaimerContainer .emby-button:hover,
@@ -1202,6 +1215,7 @@ a.raised.emby-button {
 #loginPage .loginDisclaimerContainer::before {
   content: 'or sign in with';
   display: block;
+  width: 100%;
   text-align: center;
   font-size: 0.85em;
   color: rgba(255, 255, 255, 0.5);
